@@ -1,11 +1,26 @@
-# Codex Open
+# OpenCodex
 
-Codex Open is a local-first build of the Codex CLI focused on open model
-provider support. It keeps the familiar terminal coding-agent workflow while
-adding provider integrations that can be used without changing a global Codex
-installation.
+OpenCodex is a local-first, community-driven build of the Codex CLI focused on
+open model provider support. It keeps the familiar terminal coding-agent
+workflow while adding provider integrations that can be used without changing a
+global Codex installation.
 
-The first release feature is native NVIDIA NIM support.
+The first release feature is native NVIDIA NIM support. More providers and
+quality-of-life features will be added from real community requests.
+
+## Community
+
+OpenCodex is meant to be practical and community-shaped. If something breaks,
+open an issue. If a provider, model, or workflow is missing, open a feature
+request. If the request is clear, useful, and backed by official docs where
+needed, it can be added.
+
+Bring the details that make the work actionable:
+
+- What you tried.
+- What failed or what you want added.
+- Provider/model docs when the request involves an external API.
+- Exact model ids, endpoints, and error messages when available.
 
 ## Highlights
 
@@ -18,9 +33,8 @@ The first release feature is native NVIDIA NIM support.
 - Provider-specific shell guidance to prefer fast workspace search tools such as
   `rg`, `rg --files`, and `git ls-files`.
 
-Future provider and feature integrations will be considered through GitHub
-issues. Open a provider request when you want another model host or API surface
-added.
+Future provider and feature integrations will be driven through GitHub issues.
+Open a provider request when you want another model host or API surface added.
 
 ## Quick Start
 
@@ -61,7 +75,7 @@ for example `z-ai/glm-5.1`.
 
 ## NVIDIA NIM
 
-Codex Open uses NVIDIA NIM's OpenAI-compatible API shape:
+OpenCodex uses NVIDIA NIM's OpenAI-compatible API shape:
 
 - Model catalog: `GET /v1/models`
 - Chat inference: `POST /v1/chat/completions`
@@ -86,7 +100,7 @@ Detailed setup and troubleshooting are in
 
 This release is provider-focused. NVIDIA NIM is the first supported external
 provider. Additional providers, model controls, and provider-specific features
-will be added based on real user requests and tested integrations.
+will be added based on community requests and tested integrations.
 
 See [`RELEASE_NOTES.md`](RELEASE_NOTES.md) for the current release notes.
 
@@ -129,5 +143,5 @@ space.
 ## License
 
 This repository is licensed under the [Apache-2.0 License](LICENSE). Codex is an
-open source project originally released by OpenAI; this build adds community
+open source project originally released by OpenAI; OpenCodex adds community
 provider integration work on top of that codebase.
