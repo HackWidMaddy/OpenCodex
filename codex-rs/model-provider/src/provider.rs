@@ -17,6 +17,7 @@ use crate::amazon_bedrock::AmazonBedrockModelProvider;
 use crate::auth::auth_manager_for_provider;
 use crate::auth::resolve_provider_auth;
 use crate::models_endpoint::OpenAiModelsEndpoint;
+use crate::fireworks_ai::FireworksAiModelProvider;
 use crate::nvidia_nim::NvidiaNimModelProvider;
 
 /// Optional provider-backed features that Codex may expose at runtime.
@@ -154,6 +155,8 @@ pub fn create_model_provider(
         Arc::new(AmazonBedrockModelProvider::new(provider_info))
     } else if provider_info.is_nvidia_nim() {
         Arc::new(NvidiaNimModelProvider::new(provider_info, auth_manager))
+    } else if provider_info.is_fireworks_ai() {
+        Arc::new(FireworksAiModelProvider::new(provider_info, auth_manager))
     } else {
         Arc::new(ConfiguredModelProvider::new(provider_info, auth_manager))
     }
