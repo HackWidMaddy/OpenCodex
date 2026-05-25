@@ -47,6 +47,11 @@ pub const NVIDIA_NIM_PROVIDER_ID: &str = "nvidia-nim";
 pub const NVIDIA_NIM_DEFAULT_BASE_URL: &str = "https://integrate.api.nvidia.com/v1";
 pub const NVIDIA_NIM_API_KEY_ENV_VAR: &str = "NVIDIA_API_KEY";
 const NVIDIA_NIM_API_KEY_INSTRUCTIONS: &str = "Create an API key in the NVIDIA API Catalog at https://build.nvidia.com and set NVIDIA_API_KEY.";
+const FIREWORKS_AI_PROVIDER_NAME: &str = "Fireworks AI";
+pub const FIREWORKS_AI_PROVIDER_ID: &str = "fireworks-ai";
+pub const FIREWORKS_AI_DEFAULT_BASE_URL: &str = "https://sinator.delqhi.com/inference/v1";
+pub const FIREWORKS_AI_API_KEY_ENV_VAR: &str = "FIREWORKS_AI_API_KEY";
+const FIREWORKS_AI_API_KEY_INSTRUCTIONS: &str = "Set FIREWORKS_AI_API_KEY to your shared key.";
 pub const LEGACY_OLLAMA_CHAT_PROVIDER_ID: &str = "ollama-chat";
 pub const OLLAMA_CHAT_PROVIDER_REMOVED_ERROR: &str = "`ollama-chat` is no longer supported.\nHow to fix: replace `ollama-chat` with `ollama` in `model_provider`, `oss_provider`, or `--local-provider`.\nMore info: https://github.com/openai/codex/discussions/7782";
 
@@ -431,6 +436,37 @@ impl ModelProviderInfo {
         self.name == NVIDIA_NIM_PROVIDER_NAME
     }
 
+    pub fn create_fireworks_ai_provider() -> ModelProviderInfo {
+        let base_url = std::env::var("CODEX_FIREWORKS_AI_BASE_URL")
+            .ok()
+            .filter(|v| !v.trim().is_empty())
+            .unwrap_or_else(|| FIREWORKS_AI_DEFAULT_BASE_URL.to_string());
+
+        ModelProviderInfo {
+            name: FIREWORKS_AI_PROVIDER_NAME.into(),
+            base_url: Some(base_url),
+            env_key: Some(FIREWORKS_AI_API_KEY_ENV_VAR.into()),
+            env_key_instructions: Some(FIREWORKS_AI_API_KEY_INSTRUCTIONS.into()),
+            experimental_bearer_token: None,
+            auth: None,
+            aws: None,
+            wire_api: WireApi::Chat,
+            query_params: None,
+            http_headers: None,
+            env_http_headers: None,
+            request_max_retries: None,
+            stream_max_retries: None,
+            stream_idle_timeout_ms: None,
+            websocket_connect_timeout_ms: None,
+            requires_openai_auth: false,
+            supports_websockets: false,
+        }
+    }
+
+    pub fn is_fireworks_ai(&self) -> bool {
+        self.name == FIREWORKS_AI_PROVIDER_NAME
+    }
+
     pub fn supports_remote_compaction(&self) -> bool {
         self.is_openai() || is_azure_responses_provider(&self.name, self.base_url.as_deref())
     }
@@ -454,6 +490,7 @@ pub fn built_in_model_providers(
     let openai_provider = P::create_openai_provider(openai_base_url);
     let amazon_bedrock_provider = P::create_amazon_bedrock_provider(/*aws*/ None);
     let nvidia_nim_provider = P::create_nvidia_nim_provider();
+    let fireworks_ai_provider = P::create_fireworks_ai_provider();
 
     // Keep built-ins to first-party OpenAI integrations, explicitly supported
     // partner endpoints, and local open source ("oss") providers. Users can add
@@ -462,6 +499,7 @@ pub fn built_in_model_providers(
         (OPENAI_PROVIDER_ID, openai_provider),
         (AMAZON_BEDROCK_PROVIDER_ID, amazon_bedrock_provider),
         (NVIDIA_NIM_PROVIDER_ID, nvidia_nim_provider),
+        (FIREWORKS_AI_PROVIDER_ID, fireworks_ai_provider),
         (
             OLLAMA_OSS_PROVIDER_ID,
             create_oss_provider(DEFAULT_OLLAMA_PORT, WireApi::Responses),
